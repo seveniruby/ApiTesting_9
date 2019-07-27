@@ -1,0 +1,145 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "data",
+    "error_code",
+    "error_description"
+  ],
+  "properties": {
+    "data": {
+      "$id": "#/properties/data",
+      "type": "object",
+      "title": "The Data Schema",
+      "required": [
+        "pid",
+        "category",
+        "stocks"
+      ],
+      "properties": {
+        "pid": {
+          "$id": "#/properties/data/properties/pid",
+          "type": "integer",
+          "title": "The Pid Schema",
+          "default": 0,
+          "examples": [
+            -1
+          ]
+        },
+        "category": {
+          "$id": "#/properties/data/properties/category",
+          "type": "integer",
+          "title": "The Category Schema",
+          "default": 0,
+          "examples": [
+            1
+          ]
+        },
+        "stocks": {
+          "$id": "#/properties/data/properties/stocks",
+          "type": "array",
+          "title": "The Stocks Schema",
+          "items": {
+            "$id": "#/properties/data/properties/stocks/items",
+            "type": "object",
+            "title": "The Items Schema",
+            "required": [
+              "symbol",
+              "name",
+              "type",
+              "remark",
+              "exchange",
+              "created"
+            ],
+            "properties": {
+              "symbol": {
+                "$id": "#/properties/data/properties/stocks/items/properties/symbol",
+                "type": "string",
+                "title": "The Symbol Schema",
+                "default": "",
+                "examples": [
+                  "00633"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "name": {
+                "$id": "#/properties/data/properties/stocks/items/properties/name",
+                "type": "string",
+                "title": "The Name Schema",
+                "default": "",
+                "examples": [
+                  "中国全通"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "type": {
+                "$id": "#/properties/data/properties/stocks/items/properties/type",
+                "type": "integer",
+                "title": "The Type Schema",
+                "default": 0,
+                "examples": [
+                  30
+                ],
+                "changeme": 0,
+                "changeme1": "",
+                "minimum": 1.0,
+                "maximum": 20.0
+              },
+              "remark": {
+                "$id": "#/properties/data/properties/stocks/items/properties/remark",
+                "type": "string",
+                "title": "The Remark Schema",
+                "default": "",
+                "examples": [
+                  ""
+                ],
+                "pattern": "^(.*)$"
+              },
+              "exchange": {
+                "$id": "#/properties/data/properties/stocks/items/properties/exchange",
+                "type": "string",
+                "title": "The Exchange Schema",
+                "default": "",
+                "examples": [
+                  "HK"
+                ],
+                "pattern": "^(.*)$"
+              },
+              "created": {
+                "$id": "#/properties/data/properties/stocks/items/properties/created",
+                "type": "integer",
+                "title": "The Created Schema",
+                "default": 0,
+                "examples": [
+                  1563010594950
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "error_code": {
+      "$id": "#/properties/error_code",
+      "type": "integer",
+      "title": "The Error_code Schema",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "error_description": {
+      "$id": "#/properties/error_description",
+      "type": "string",
+      "title": "The Error_description Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    }
+  }
+}

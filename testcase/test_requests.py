@@ -4,6 +4,7 @@ import pytest
 import json
 import jsonpath
 from hamcrest import *
+from jsonschema import validate
 
 class TestRequests(object):
     logging.basicConfig(level=logging.INFO)
@@ -46,6 +47,19 @@ class TestRequests(object):
         assert_that(jsonpath.jsonpath(r.json(),"$.data.stocks[?(@.symbol == 'F006947')].name")[0],
                     equal_to("华宝中短债债券B"), "比较上市代码与名字")
 
+    def test_xueqiu_list_schema(self):
+        url = "https://stock.xueqiu.com/v5/stock/portfolio/stock/list.json?"
+        r = requests.get(url,
+                         params={"category": "2"},
+                         headers={'User-Agent': 'Xueqiu Android 11.19'},
+                         cookies={"u": "3446260779", "xq_a_token": "5806a70c6bc5d5fb2b00978aeb1895532fffe502"}
+                         )
+        logging.info(json.dumps(r.json(), indent=2))
+
+        schema=json.load(open("list_schema.json"))
+        validate(instance=r.json(), schema=schema)
+
+
     def test_hamcrest(self):
         assert_that(0.1 * 0.1, close_to(0.01, 0.000000000000001))
         #assert_that(0.1 * 0.1, close_to(0.01, 0.000000000000000001))
@@ -56,6 +70,18 @@ class TestRequests(object):
                 has_items("c", "a")
             )
         )
+
+    def test_schema(self):
+        schema = {
+            "type": "object",
+            "properties": {
+                "price": {"type": "number"},
+                "name": {"type": "string"},
+            },
+        }
+        validate(instance={"name": "Eggs", "price": "34.99"}, schema=schema)
+
+
 
 
 
