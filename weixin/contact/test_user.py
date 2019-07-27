@@ -2,9 +2,9 @@ import logging
 import time
 
 import pystache
-import requests
 
-from weixin.contact.token import Weixin
+from weixin.contact.user import User
+from weixin.contact.utils import Utils
 
 
 class TestUser:
@@ -13,7 +13,7 @@ class TestUser:
     @classmethod
     def setup_class(cls):
         # todo: create depart
-        pass
+        cls.user = User()
 
     def test_create(self):
         uid = "seveniruby_" + str(time.time())
@@ -24,46 +24,28 @@ class TestUser:
             "email": uid + "@testerhome.com"
 
         }
-        r = requests.post("https://qyapi.weixin.qq.com/cgi-bin/user/create",
-                          params={"access_token": Weixin.get_token()},
-                          json=data,
-
-                          ).json()
+        r = self.user.create(data)
         logging.debug(r)
         assert r['errcode'] == 0
 
-    def test_create_by_template(self):
+    def test_create_by_real(self):
         uid = "seveniruby_" + str(time.time())
-        mobile=str(time.time()).replace(".", "")[0:11]
-        data=str(self.get_user({
+        mobile = str(time.time()).replace(".", "")[0:11]
+        data = str(Utils.parse("user_create.json", {
             "name": uid,
             "title": "校长",
-            "email": "1@1.com",
+            "email": mobile + "@qq.com",
             "mobile": mobile
         }))
-        data=data.encode("UTF-8")
+        data = data.encode("UTF-8")
 
-        r = requests.post("https://qyapi.weixin.qq.com/cgi-bin/user/create",
-                          params={"access_token": Weixin.get_token()},
-                          data=data,
-                          headers={"content-type": "application/json; charset=UTF-8"}
-                          ).json()
+        r = self.user.create(data=data)
         logging.debug(r)
         assert r['errcode'] == 0
 
-
     def test_list(self):
-        r = requests.get("https://qyapi.weixin.qq.com/cgi-bin/user/simplelist",
-                         params={"access_token": Weixin.get_token(),
-                                 "department_id": 1,
-                                 "fetch_child": 0}
-                         ).json()
-
+        r = self.user.list()
         logging.debug(r)
 
-
-    def get_user(self, dict):
-        template="".join(open("user_create.json").readlines())
-        return pystache.render(template, dict)
-    def test_get_user(self):
-        logging.debug(self.get_user({ "name": "seveniruby", "title": "校长", "email": "1@1.com"}))
+        r = self.user.list(department_id=65)
+        logging.debug(r)
