@@ -22,7 +22,6 @@ class TestUser:
             "name": uid,
             "department": [self.depart_id],
             "email": uid + "@testerhome.com"
-
         }
         r = self.user.create(data)
         logging.debug(r)

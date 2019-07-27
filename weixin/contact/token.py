@@ -8,13 +8,17 @@ class Weixin:
     @classmethod
     def get_token(cls):
         if len(cls._token)==0:
-            conf=yaml.safe_load(open("weixin.yaml"))
-            logging.debug(conf["env"])
-
-            r=requests.get("https://qyapi.weixin.qq.com/cgi-bin/gettoken",
-                         params={"corpid": conf["env"]["corpid"],
-                                 "corpsecret": conf["env"]["secret"]}
-                         ).json()
-            cls._token=r["access_token"]
-
+            cls._token=cls.get_token_new()
         return cls._token
+
+    @classmethod
+    def get_token_new(cls):
+        conf=yaml.safe_load(open("weixin.yaml"))
+        logging.debug(conf["env"])
+
+        r=requests.get("https://qyapi.weixin.qq.com/cgi-bin/gettoken",
+                     params={"corpid": conf["env"]["corpid"],
+                             "corpsecret": conf["env"]["secret"]}
+                     ).json()
+        return r["access_token"]
+
