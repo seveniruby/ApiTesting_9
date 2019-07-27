@@ -16,4 +16,5 @@ class Weixin:
                                  "corpsecret": conf["env"]["secret"]}
                          ).json()
             cls._token=r["access_token"]
+
         return cls._token

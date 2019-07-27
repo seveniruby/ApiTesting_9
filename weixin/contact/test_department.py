@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 
+import pytest
 import requests
 
 from weixin.contact.token import Weixin
@@ -21,7 +22,7 @@ class TestDepartment:
     def test_create_depth(self):
         parentid = 1
 
-        for i in range(15):
+        for i in range(14):
             data = {
                 "name": "第十期_seveniruby_" + str(parentid)+ str(datetime.datetime.now().timestamp()),
                 "parentid": parentid,
@@ -36,6 +37,7 @@ class TestDepartment:
                               ).json()
             logging.debug(r)
             parentid = r["id"]
+            assert r["errcode"]==0
 
     def test_create_name(self):
         data = {
@@ -50,9 +52,16 @@ class TestDepartment:
                           ).json()
         logging.debug(r)
 
-    def test_create_order(self):
+    @pytest.mark.parametrize("name", [
+        "广州研发中心",
+        "東京アニメーション研究所",
+        "도쿄 애니메이션 연구소",
+        "معهد طوكيو للرسوم المتحركة",
+        "東京動漫研究所"
+    ])
+    def test_create_order(self, name):
         data = {
-            "name": "广州研发中心",
+            "name": name,
             "parentid": 1,
             "order": 1,
         }
@@ -61,7 +70,10 @@ class TestDepartment:
                           params={"access_token": Weixin.get_token()},
                           json=data
                           ).json()
+
+        #解密
         logging.debug(r)
+        assert r["errcode"]==0
 
     def test_get(self):
         r = requests.get("https://qyapi.weixin.qq.com/cgi-bin/department/list",
